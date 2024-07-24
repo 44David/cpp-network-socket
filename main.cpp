@@ -8,6 +8,8 @@ int main() {
   
   WSADATA wsaData;
 
+
+  // initialize socket
   int res = WSAStartup(MAKEWORD(2,2), &wsaData);
 
   if (res != 0) {
@@ -17,6 +19,8 @@ int main() {
     std::cout << "Successful. System Status: " << std::endl << wsaData.szSystemStatus << std::endl;
   };
 
+  
+  // create a socket, and bind it to an address and port
   SOCKET ServerSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
   int port = 4000;
   sockaddr_in tcpaddr;
@@ -28,13 +32,22 @@ int main() {
 
   std::cout << "Socket successfully bound to tcp address" << std::endl;
 
+
+  // make the socket listen to the address
   if ( listen(ServerSocket, 1) == SOCKET_ERROR ) {
     std::cout << "An error occured when listening to this socket." << std::endl << WSAGetLastError() << std::endl;
   } else {
     std::cout << "Socket is listening with no errors";
   }
 
+  // accept connections with the socket
+  SOCKET acceptSocket = (ServerSocket, (SOCKADDR *)&tcpaddr, sizeof(tcpaddr));
+
 };
+
+void getHTTPResponseData(int argc, char** argv) {
+  
+}
 
 
 // to compile run:
