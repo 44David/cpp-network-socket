@@ -3,26 +3,30 @@
 #include <ws2tcpip.h>
 #include <stdio.h>
 
-int main() {    
-    SOCKET ListenSocket;
-    struct sockaddr_in saServer;
+int main() {
 
-    auto host = gethostbyname("127.0.0.1");
-    auto hostIP = inet_ntoa (*(struct in_addr *)*host->h_addr_list);
+  
+  WSADATA wsaData;
 
-    std::cout << listen(ListenSocket, SOMAXCONN);
+  int res = WSAStartup(MAKEWORD(2,2), &wsaData);
 
-    WSADATA wsaData;
-    int res = WSAStartup(MAKEWORD(2,2), &wsaData);
-    std::cout << ListenSocket << std::endl;
+  if (res != 0) {
+    std::cout << "An error ocurred: " << WSAGetLastError() << std::endl;
 
-    if ( listen( ListenSocket, SOMAXCONN ) == SOCKET_ERROR ) {
-        printf("Listen failed: %ld\n", WSAGetLastError() );
-        printf("Result from WSAStartup: %ld\n", res );
-        closesocket(ListenSocket);
-        WSACleanup();
-    };  
+  } else {
+    std::cout << "Successful. System Status: " << std::endl << wsaData.szSystemStatus << std::endl;
+  };
 
+  SOCKET ServerSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+  sockaddr_in tcpaddr;
+  tcpaddr.sin_family = AF_INET;
+  tcpaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+  tcpaddr.sin_port = htons("4000");
+
+  bind(ServerSocket, (SOCKADDR *)&tcpaddr, sizeof(tcpaddr));
+
+  std::cout << "Socket successfully bound to tcp address"
 
 };
 
