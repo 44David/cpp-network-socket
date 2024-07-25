@@ -2,8 +2,9 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdio.h>
+#include <CLI11.hpp>
 
-int main() {
+int main(int argc, char** argv) {
 
   
   WSADATA wsaData;
@@ -19,6 +20,14 @@ int main() {
     std::cout << "Successful. System Status: " << std::endl << wsaData.szSystemStatus << std::endl;
   };
 
+
+  CLI::App app{"C++ Packet Analyzer"};
+  argv = app.ensure_utf8(argv);
+  std::string user_defined_addr = "127.0.0.1";
+
+  add.option("-a --address", user_defined_addr);
+
+  CLI11_PARSE(app, argc, argv);
   
   // create a socket, and bind it to an address and port
   SOCKET ServerSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -43,6 +52,7 @@ int main() {
   // accept connections with the socket
   SOCKET acceptSocket = (ServerSocket, (SOCKADDR *)&tcpaddr, sizeof(tcpaddr));
 
+  return 0;
 };
 
 void getHTTPResponseData(int argc, char** argv) {
