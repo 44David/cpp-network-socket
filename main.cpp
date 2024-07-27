@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 
   // make the socket listen to the address
   if ( listen(ServerSocket, 1) == SOCKET_ERROR ) {
-    std::cout << "An error occured when listening to this socket." << std::endl << WSAGetLastError() << std::endl;
+    std::cout << "An error occurred when listening to this socket." << std::endl << WSAGetLastError() << std::endl;
   } else {
     std::cout << "Socket is listening with no errors" << std::endl;
   }
@@ -52,19 +52,21 @@ int main(int argc, char** argv) {
   while(true) {
     SOCKET acceptSocket = (ServerSocket, (SOCKADDR *)&tcpaddr, sizeof(tcpaddr));
 
-    char buffer[4096];
+    char buffer[4096];  
+    ulong size_data;
+    data = "";
 
-    if (recv(acceptSocket, buffer *, 4096, 0) == SOCKET_ERROR) {
+    if (recvAll(acceptSocket, &size_data, sizeof(size_data)) == SOCKET_ERROR) {
       std::cout << "Socket failed to fetch bytes";
       break;
     } else {
-      std::cout << buffer;
+      size_data = ntohl(size_data);
+      data.resize(size_data);
+      result = recvAll(ServerSocket, &size_data, std::string &data);
+
+      std::cout << "Data: " << result << std::endl;
     };
-
-
-
-
-  }
+  };
   
   return 0;
 };
