@@ -2,11 +2,10 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdio.h>
-#include <CLI11.hpp>
 
 int main(int argc, char** argv) {
 
-  
+    
   WSADATA wsaData;
 
 
@@ -21,17 +20,17 @@ int main(int argc, char** argv) {
   };
 
 
-  CLI::App app{"C++ Packet Analyzer"};
-  argv = app.ensure_utf8(argv);
-  std::string user_defined_addr = "127.0.0.1";
+  // CLI::App app{"C++ Packet Analyzer"};
+  // argv = app.ensure_utf8(argv);
+  // std::string user_defined_addr = "127.0.0.1";
 
-  add.option("-a --address", user_defined_addr);
+  // add.option("-a --address", user_defined_addr);
 
-  CLI11_PARSE(app, argc, argv);
+  // CLI11_PARSE(app, argc, argv);
   
   // create a socket, and bind it to an address and port
   SOCKET ServerSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-  int port = 4000;
+  int port = 3000;
   sockaddr_in tcpaddr;
   tcpaddr.sin_family = AF_INET;
   tcpaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
@@ -46,12 +45,27 @@ int main(int argc, char** argv) {
   if ( listen(ServerSocket, 1) == SOCKET_ERROR ) {
     std::cout << "An error occured when listening to this socket." << std::endl << WSAGetLastError() << std::endl;
   } else {
-    std::cout << "Socket is listening with no errors";
+    std::cout << "Socket is listening with no errors" << std::endl;
   }
 
   // accept connections with the socket
-  SOCKET acceptSocket = (ServerSocket, (SOCKADDR *)&tcpaddr, sizeof(tcpaddr));
+  while(true) {
+    SOCKET acceptSocket = (ServerSocket, (SOCKADDR *)&tcpaddr, sizeof(tcpaddr));
 
+    char buffer[4096];
+
+    if (recv(acceptSocket, buffer *, 4096, 0) == SOCKET_ERROR) {
+      std::cout << "Socket failed to fetch bytes";
+      break;
+    } else {
+      std::cout << buffer;
+    };
+
+
+
+
+  }
+  
   return 0;
 };
 
