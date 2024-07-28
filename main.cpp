@@ -89,6 +89,14 @@ int init_client_socket() {
       std::cout << "Client Socket connected." << std::endl;
   }
 
+  //start sending data 
+
+  char buffer;
+  send(ClientSocket, (buffer *), sizeof(buffer), 0);
+}
+
+int send_data() {
+
 }
 
 void getHTTPResponseData(int argc, char** argv) {
