@@ -4,8 +4,11 @@
 #include <stdio.h>
 
 int main(int argc, char** argv) {
+  init_server_socket();
+}
 
-    
+
+int init_server_socket() {    
   WSADATA wsaData;
 
 
@@ -56,13 +59,13 @@ int main(int argc, char** argv) {
     ulong size_data;
     data = "";
 
-    if (recvAll(acceptSocket, &size_data, sizeof(size_data)) == SOCKET_ERROR) {
+    if (RecvAll(acceptSocket, &size_data, sizeof(size_data)) == SOCKET_ERROR) {
       std::cout << "Socket failed to fetch bytes";
       break;
     } else {
       size_data = ntohl(size_data);
       data.resize(size_data);
-      result = recvAll(ServerSocket, &size_data, std::string &data);
+      result = RecvAll(ServerSocket, &size_data, std::string &data);
 
       std::cout << "Data: " << result << std::endl;
     };
@@ -70,6 +73,23 @@ int main(int argc, char** argv) {
   
   return 0;
 };
+
+int init_client_socket() {
+  SOCKET ClientSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+  int port = 3000;
+  sockaddr_in tcpaddr;
+  tcpaddr.sin_family = AF_INET;
+  tcpaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+  tcpaddr.sin_port = htons(port);
+
+
+  if ( connect(ClientSocket, (SOCKADDR *)&tcpaddr, sizeof(tcpaddr) == SOCKET_ERROR ) ) {
+      std::cout << "Client Socket could not connect." << std::endl;
+  } else {
+      std::cout << "Client Socket connected." << std::endl;
+  }
+
+}
 
 void getHTTPResponseData(int argc, char** argv) {
   
