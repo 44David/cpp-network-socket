@@ -3,14 +3,10 @@
 #include <ws2tcpip.h>
 #include <stdio.h>
 
-int main(int argc, char** argv) {
-  init_server_socket();
-}
 
 
 int init_server_socket() {    
   WSADATA wsaData;
-
 
   // initialize socket
   int res = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -52,24 +48,23 @@ int init_server_socket() {
   }
 
   // accept connections with the socket
-  while(true) {
+
     SOCKET acceptSocket = (ServerSocket, (SOCKADDR *)&tcpaddr, sizeof(tcpaddr));
 
     char buffer[4096];  
-    ulong size_data;
-    data = "";
+    char size_data;
+    std::string data = "";
 
-    if (RecvAll(acceptSocket, &size_data, sizeof(size_data)) == SOCKET_ERROR) {
+    if (recv(acceptSocket, &size_data, sizeof(size_data), 0) == SOCKET_ERROR) {
       std::cout << "Socket failed to fetch bytes";
-      break;
     } else {
+
       size_data = ntohl(size_data);
       data.resize(size_data);
-      result = RecvAll(ServerSocket, &size_data, std::string &data);
+      recv(ServerSocket, &data, &size_data, 0);
 
-      std::cout << "Data: " << result << std::endl;
-    };
-  };
+      // std::cout << "Data: " << result << std::endl;
+    }; 
   
   return 0;
 };
@@ -82,7 +77,6 @@ int init_client_socket() {
   tcpaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
   tcpaddr.sin_port = htons(port);
 
-
   if ( connect(ClientSocket, (SOCKADDR *)&tcpaddr, sizeof(tcpaddr) == SOCKET_ERROR ) ) {
       std::cout << "Client Socket could not connect." << std::endl;
   } else {
@@ -90,10 +84,14 @@ int init_client_socket() {
   }
 
   //start sending data 
-
   char buffer;
   send(ClientSocket, (buffer *), sizeof(buffer), 0);
 }
+
+int main(int argc, char** argv) {
+  init_server_socket();
+}
+
 
 int send_data() {
 
