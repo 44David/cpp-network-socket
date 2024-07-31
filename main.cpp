@@ -35,11 +35,13 @@ int init_server_socket() {
   tcpaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
   tcpaddr.sin_port = htons(port);
 
-  bind(ServerSocket, (SOCKADDR *)&tcpaddr, sizeof(tcpaddr));
+  if ( bind(ServerSocket, (SOCKADDR *)&tcpaddr, sizeof(tcpaddr)) == SOCKET_ERROR) {
+    std::cout << "Server socket failed to bind."
+  } else {
+    std::cout << "Socket successfully bound to tcp address" << std::endl;
+  };
 
-  std::cout << "Socket successfully bound to tcp address" << std::endl;
-
-
+  
   // make the socket listen to the address
   if ( listen(ServerSocket, 1) == SOCKET_ERROR ) {
     std::cout << "An error occurred when listening to this socket." << std::endl << WSAGetLastError() << std::endl;
@@ -83,9 +85,11 @@ int init_client_socket() {
       std::cout << "Client Socket connected." << std::endl;
   }
 
-  //start sending data 
-  char buffer;
-  send(ClientSocket, (buffer *), sizeof(buffer), 0);
+  if (SOCKET_ERROR) {
+    std::cout << "There was a socket error."
+  } else {
+    send_data()
+  }
 }
 
 int main(int argc, char** argv) {
@@ -94,6 +98,8 @@ int main(int argc, char** argv) {
 
 
 int send_data() {
+  char buffer;
+  send(ClientSocket, *buffer, sizeof(buffer), 0);
 
 }
 
